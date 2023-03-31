@@ -1,18 +1,18 @@
 // gpt-summarize.ts
 import { generateChatCompletion } from '@paperdave/openai';
 
-export type OpenAI_Model = 'gpt-4' | 'gpt-4-32k' | 'gpt-3.5-turbo';
+export type GPT_Models = 'gpt-4' | 'gpt-4-32k' | 'gpt-3.5-turbo';
 
-export interface GPTApiHandlerConfig {
+export interface GPT_Summary_Config {
   systemInstruction: string;
-  model: OpenAI_Model;
+  model: GPT_Models;
   targetWordsPerChunk: number;
   debug?: boolean;
 }
 
-export async function processTextWithGPT(
+export async function summarize(
   text: string,
-  config: GPTApiHandlerConfig
+  config: GPT_Summary_Config
 ): Promise<string> {
   const { systemInstruction, model, targetWordsPerChunk, debug } = config;
   const chunks = splitText(text, targetWordsPerChunk);
@@ -87,7 +87,7 @@ function splitText(text: string, targetWordsPerChunk: number): string[] {
   return chunks;
 }
 
-async function createCompletion(chunk: string, systemInstruction: string, model: OpenAI_Model) {
+async function createCompletion(chunk: string, systemInstruction: string, model: GPT_Models) {
   const response = await generateChatCompletion({
     model: model,
     messages: [

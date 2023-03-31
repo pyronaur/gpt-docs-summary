@@ -1,12 +1,12 @@
 // main.ts
-import { GPTApiHandlerConfig, OpenAI_Model } from "./gpt-summarize";
+import { GPT_Summary_Config, GPT_Models } from "./gpt-summarize";
 import { readFromGithub } from "./read-from-github";
 
 interface MainConfig {
 	url?: string;
 	localFile?: string;
 	systemInstruction?: string;
-	model?: OpenAI_Model;
+	model?: GPT_Models;
 	outputFile?: string;
 	targetWordsPerChunk?: number;
 	debug?: boolean;
@@ -33,7 +33,7 @@ export async function processText(config: MainConfig) {
 		debug = false,
 	} = config;
 
-	const gptConfig: GPTApiHandlerConfig = {
+	const gptConfig: GPT_Summary_Config = {
 		systemInstruction,
 		model,
 		targetWordsPerChunk,

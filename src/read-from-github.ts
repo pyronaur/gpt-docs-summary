@@ -1,15 +1,15 @@
 // read-from-github.ts
 import { Octokit } from "@octokit/rest";
-import { GPTApiHandlerConfig, processTextWithGPT } from "./gpt-summarize.js";
+import { GPT_Summary_Config, summarize } from "./gpt-summarize.js";
 import fs from 'fs';
 
-interface GithubTextProviderConfig {
+interface Read_Github_Config {
   url: string;
   outputFile: string;
-  gptConfig: GPTApiHandlerConfig;
+  gptConfig: GPT_Summary_Config;
 }
 
-export async function readFromGithub(config: GithubTextProviderConfig) {
+export async function readFromGithub(config: Read_Github_Config) {
   const { url, outputFile, gptConfig } = config;
 
   const parsedUrl = new URL(url);
@@ -28,7 +28,7 @@ async function fetchMarkdownFiles(
   repo: string,
   path: string,
   outputFile: string,
-  gptConfig: GPTApiHandlerConfig
+  gptConfig: GPT_Summary_Config
 ): Promise<void> {
   const octokit = new Octokit({
     auth: process.env.GITHUB_PERSONAL_ACCESS_TOKEN,
@@ -57,7 +57,7 @@ async function fetchMarkdownFiles(
       console.log(`Processing file: ${file.name}`);
       const markdownResponse = await fetch(file.download_url as string);
       const markdownContent = await markdownResponse.text();
-      const outputText = await processTextWithGPT(markdownContent, gptConfig);
+      const outputText = await summarize(markdownContent, gptConfig);
 
       // Save the processed text to a file
       fs.appendFileSync(outputFile, outputText);

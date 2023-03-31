@@ -1,5 +1,5 @@
 // cli.ts
-import { processText } from "./main";
+import { processText } from "./src/main";
 
 const url = process.argv[2];
 const localFile = process.argv[3];
