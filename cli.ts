@@ -1,14 +1,12 @@
-import { processGithubRepoMarkdown } from "./index";
+// cli.ts
+import { processText } from "./main";
 
 const url = process.argv[2];
+const localFile = process.argv[3];
 
-if (!url) {
-	console.error("Please provide a GitHub URL as an argument.");
-	process.exit(1);
-}
-
-processGithubRepoMarkdown({
-	url: url,
-	outputFile: "output.md",
-	debug: true,
+processText({
+  url: url,
+  localFile: localFile,
+  outputFile: "output.md",
+  debug: true,
 });
