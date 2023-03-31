@@ -1,26 +1,30 @@
-// read-from-github.ts
+// src/read-from-github.ts
+
+import { ProcessingStrategy } from "./strategy";
 import { Octokit } from "@octokit/rest";
 import { GPT_Summary_Config, summarize } from "./gpt-summarize.js";
 import fs from 'fs';
 
-interface Read_Github_Config {
+export interface Read_Github_Config {
   url: string;
-  outputFile: string;
-  gptConfig: GPT_Summary_Config;
 }
 
-export async function readFromGithub(config: Read_Github_Config) {
-  const { url, outputFile, gptConfig } = config;
+export class GithubStrategy implements ProcessingStrategy {
+  constructor(private config: Read_Github_Config) {}
 
-  const parsedUrl = new URL(url);
-  const [, owner, repo, , ...pathParts] = parsedUrl.pathname.split("/");
-  const path = pathParts.join("/");
+  async execute(outputFile: string, gptConfig: GPT_Summary_Config): Promise<void> {
+    const { url } = this.config;
 
-  // Remove 'blob/master' from the path
-  const pathWithoutBlobMaster = path.replace("master", "");
+    const parsedUrl = new URL(url);
+    const [, owner, repo, , ...pathParts] = parsedUrl.pathname.split("/");
+    const path = pathParts.join("/");
 
-  // Fetch and process the markdown files
-  await fetchMarkdownFiles(owner, repo, pathWithoutBlobMaster, outputFile, gptConfig);
+    // Remove 'blob/master' from the path
+    const pathWithoutBlobMaster = path.replace("master", "");
+
+    // Fetch and process the markdown files
+    await fetchMarkdownFiles(owner, repo, pathWithoutBlobMaster, outputFile, gptConfig);
+  }
 }
 
 async function fetchMarkdownFiles(

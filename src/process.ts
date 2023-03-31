@@ -1,10 +1,10 @@
-// main.ts
-import { GPT_Summary_Config, GPT_Models } from "./gpt-summarize";
-import { readFromGithub } from "./read-from-github";
+// src/process.ts
 
-interface MainConfig {
-	url?: string;
-	localFile?: string;
+import { GPT_Summary_Config, GPT_Models } from "./gpt-summarize";
+import { ProcessingStrategy } from "./strategy";
+
+interface ProcessConfig {
+	strategy: ProcessingStrategy;
 	systemInstruction?: string;
 	model?: GPT_Models;
 	outputFile?: string;
@@ -12,7 +12,7 @@ interface MainConfig {
 	debug?: boolean;
 }
 
-export async function processText(config: MainConfig) {
+export async function processText(config: ProcessConfig) {
 	const defaultSystemInstruction = [
 		"Your task is to rewrite content for a prompt input to LLM. Reduce the given text as much as possible following the guidelines below:",
 		"1. Focus on extracting code examples from the provided text and reduce the surrounding text or remove it entirely.",
@@ -24,8 +24,7 @@ export async function processText(config: MainConfig) {
 	].join("\n");
 
 	const {
-		url,
-		localFile,
+		strategy,
 		systemInstruction = defaultSystemInstruction,
 		model = "gpt-3.5-turbo",
 		outputFile = "output.md",
@@ -40,12 +39,5 @@ export async function processText(config: MainConfig) {
 		debug,
 	};
 
-	if (url) {
-		await readFromGithub({ url, outputFile, gptConfig });
-	} else if (localFile) {
-		// Implement the local file processing here
-	} else {
-		console.error("Please provide either a GitHub URL or a local file path.");
-		process.exit(1);
-	}
+	await strategy.execute(outputFile, gptConfig);
 }

@@ -1,4 +1,5 @@
-// gpt-summarize.ts
+// src/gpt-summarize.ts
+
 import { generateChatCompletion } from '@paperdave/openai';
 
 export type GPT_Models = 'gpt-4' | 'gpt-4-32k' | 'gpt-3.5-turbo';
