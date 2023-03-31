@@ -1,0 +1,16 @@
+{
+  "name": "gpt-docs-summary",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "bun-types": "^0.5.0"
+  },
+  "dependencies": {
+    "@octokit/rest": "^19.0.7",
+    "@paperdave/openai": "^0.1.1",
+    "@types/remarkable": "^2.0.3",
+    "chalk": "^5.2.0",
+    "openai": "^3.2.1",
+    "remarkable": "^2.0.1"
+  }
+}
